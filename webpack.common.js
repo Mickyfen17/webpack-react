@@ -1,6 +1,7 @@
 const path = require('path');
 const webpack = require('webpack');
 const HtmlWebpackPlugin = require('html-webpack-plugin');
+const Dotenv = require('dotenv-webpack');
 
 module.exports = {
   entry: './src/index.js',
@@ -15,10 +16,18 @@ module.exports = {
         exclude: /node_modules/,
         use: { loader: 'babel-loader' },
       },
+      {
+        test: /\.(png|svg|jpg|gif)$/,
+        use: ['file-loader'],
+      },
     ],
   },
   resolve: {
     extensions: ['.js', '.jsx', '.json', '.scss', '.css'],
+    alias: {
+      images: path.resolve(__dirname, 'src/images'),
+      styles: path.resolve(__dirname, 'src/styles'),
+    },
   },
   plugins: [
     new HtmlWebpackPlugin({
@@ -26,5 +35,6 @@ module.exports = {
       favicon: 'public/favicon.ico',
     }),
     new webpack.ProgressPlugin(),
+    new Dotenv(),
   ],
 };
