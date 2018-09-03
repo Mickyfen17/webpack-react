@@ -2,31 +2,39 @@ const merge = require('webpack-merge');
 const CleanWebpackPlugin = require('clean-webpack-plugin');
 const UglifyJSPlugin = require('uglifyjs-webpack-plugin');
 const CompressionPlugin = require('compression-webpack-plugin');
-const ExtractTextWebpackPlugin = require('extract-text-webpack-plugin');
+const MiniCssExtractPlugin = require('mini-css-extract-plugin');
+const OptimizeCSSAssetsPlugin = require('optimize-css-assets-webpack-plugin');
 const common = require('./webpack.common.js');
 
 module.exports = merge(common, {
   module: {
     rules: [
       {
-        test: /\.scss$/,
-        use: ExtractTextWebpackPlugin.extract({
-          use: ['css-loader', 'postcss-loader', 'sass-loader'],
-          fallback: 'style-loader',
-        }),
+        test: /\.(sa|sc|c)ss$/,
+        use: [
+          MiniCssExtractPlugin.loader,
+          'css-loader',
+          'postcss-loader',
+          'sass-loader',
+        ],
       },
+    ],
+  },
+  optimization: {
+    minimizer: [
+      new UglifyJSPlugin({
+        sourceMap: true,
+        uglifyOptions: {
+          output: {
+            comments: false,
+          },
+        },
+      }),
+      new OptimizeCSSAssetsPlugin({}),
     ],
   },
   plugins: [
     new CleanWebpackPlugin('dist', {}),
-    new UglifyJSPlugin({
-      sourceMap: true,
-      uglifyOptions: {
-        output: {
-          comments: false,
-        },
-      },
-    }),
     new CompressionPlugin({
       asset: '[path].gz[query]',
       algorithm: 'gzip',
@@ -34,9 +42,9 @@ module.exports = merge(common, {
       threshold: 10240,
       minRatio: 0.8,
     }),
-    new ExtractTextWebpackPlugin({
+    new MiniCssExtractPlugin({
       filename: '[name].[hash].css',
-      allChunks: true,
+      chunkFilename: '[id].[hash].css',
     }),
   ],
 });
