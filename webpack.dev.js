@@ -1,8 +1,15 @@
+const path = require('path');
 const merge = require('webpack-merge');
-const common = require('./webpack.common');
+const HtmlWebpackPlugin = require('html-webpack-plugin');
 const MiniCssExtractPlugin = require('mini-css-extract-plugin');
+const common = require('./webpack.common');
 
 module.exports = merge(common, {
+  mode: 'development',
+  output: {
+    path: path.join(__dirname, '/dist'),
+    filename: '[name].bundle.js',
+  },
   devtool: 'cheap-eval-source-map',
   module: {
     rules: [
@@ -21,6 +28,10 @@ module.exports = merge(common, {
     ],
   },
   plugins: [
+    new HtmlWebpackPlugin({
+      template: 'public/index.html',
+      favicon: 'public/favicon.ico',
+    }),
     new MiniCssExtractPlugin({
       filename: '[name].css',
       chunkFilename: '[id].css',
