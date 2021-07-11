@@ -9,20 +9,29 @@ module.exports = {
       {
         test: /\.js?$/,
         exclude: /node_modules/,
-        use: { loader: 'babel-loader' },
+        use: { loader: 'babel-loader' }
       },
       {
         test: /\.(png|svg|jpg|gif)$/,
-        use: ['file-loader'],
+        use: [
+          {
+            loader: 'url-loader',
+            options: {
+              limit: 8000,
+              name: 'images/[name].[hash:8].[ext]'
+            }
+          }
+        ]
       },
-    ],
+      { test: /\.(woff|woff2|eot|ttf|otf)$/, use: ['file-loader'] }
+    ]
   },
   resolve: {
     extensions: ['.js', '.jsx', '.json', '.scss', '.css'],
     alias: {
-      images: path.resolve(__dirname, 'src/images'),
-      styles: path.resolve(__dirname, 'src/styles'),
-    },
+      images: path.resolve(__dirname, 'images'),
+      styles: path.resolve(__dirname, 'styles')
+    }
   },
-  plugins: [new webpack.ProgressPlugin(), new Dotenv()],
+  plugins: [new webpack.ProgressPlugin(), new Dotenv()]
 };
