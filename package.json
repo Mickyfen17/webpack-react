@@ -5,7 +5,6 @@
   "main": "index.js",
   "scripts": {
     "precommit": "lint-staged",
-    "prepush": "npm run lint & npm run build",
     "pretty": "prettier --print-width 100 --single-quote --trailing-comma none --jsx-single-quote true --write \"src/**/*.js\"",
     "start": "webpack serve --mode development --open --config webpack.dev.js",
     "build": "webpack --mode production --config webpack.prod.js",
